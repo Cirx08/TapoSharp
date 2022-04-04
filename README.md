@@ -98,6 +98,8 @@ if (client.Login(_username, _password))
 
 ## Version History
 
+* 1.0.4
+    * Added login state tracker
 * 1.0.3
     * Fixed issue with multiple handshake requests
     * Fixed issue with scanning of /32 network

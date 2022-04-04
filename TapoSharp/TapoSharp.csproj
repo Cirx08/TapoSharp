@@ -18,7 +18,7 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageTags>tapo;kasa;p100;p110;tp-link</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
-	<Version>1.0.3</Version>
+	<Version>1.0.4</Version>
   </PropertyGroup>
 
   <ItemGroup>

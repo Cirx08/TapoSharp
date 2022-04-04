@@ -33,11 +33,14 @@
         public TapoClient(IPAddress ip, int defaultRequestTimeout)
         {
             this.IpAddress = ip;
+            this.IsLoggedIn = false;
             this.DefaultRequestTimeout = defaultRequestTimeout;
             this.InitClient();
         }
 
         public IPAddress IpAddress { get; private set; }
+        
+        public bool IsLoggedIn { get; private set; }
 
         private int DefaultRequestTimeout { get; set; }
 
@@ -147,13 +150,16 @@
 
         public async Task<bool> LoginAsync(string username, string password)
         {
-            var token = await this.HandshakeAsync();
-            if (!string.IsNullOrEmpty(token?.Key))
+            if (!this.IsLoggedIn)
             { 
-                return await this.LoginAsync(username, password, token?.Key);
+                var token = await this.HandshakeAsync();
+                if (!string.IsNullOrEmpty(token?.Key))
+                { 
+                    await this.LoginAsync(username, password, token?.Key);
+                }
             }
 
-            return false;
+            return this.IsLoggedIn;
         }
 
         public bool Login(string username, string password, string key)
@@ -163,7 +169,7 @@
 
         public async Task<bool> LoginAsync(string username, string password, string key)
         {
-            if (_client != null && !string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password) && !string.IsNullOrEmpty(key))
+            if (_client != null && !string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password) && !string.IsNullOrEmpty(key) && !this.IsLoggedIn)
             {
                 try
                 {
@@ -184,7 +190,7 @@
                             if (!string.IsNullOrEmpty(token?.Result?.Token))
                             {
                                 _token = token.Result.Token;
-                                return true;
+                                this.IsLoggedIn = true;
                             }
                         }
                     }
@@ -192,7 +198,7 @@
                 catch { }
             }
 
-            return false;
+            return this.IsLoggedIn;
         }
 
         public DeviceInfo GetDeviceInfo()
