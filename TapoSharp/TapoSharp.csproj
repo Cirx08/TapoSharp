@@ -7,7 +7,9 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/Cirx08/TapoSharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <Title>TapoSharp</Title>
     <Description>TapoSharp is a .NET implementation of the Tapo Smart Plug API. It is written in .NET 6</Description>
+    <Authors>Cirx08</Authors>
     <Copyright>Cirx08 2022</Copyright>
     <PackageProjectUrl>https://github.com/Cirx08/TapoSharp</PackageProjectUrl>
     <Company>Cirx08</Company>
@@ -18,7 +20,7 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageTags>tapo;kasa;p100;p110;tp-link</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
-	<Version>1.0.4</Version>
+	  <Version>1.0.4</Version>
   </PropertyGroup>
 
   <ItemGroup>
