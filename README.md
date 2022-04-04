@@ -4,7 +4,7 @@ TapoSharp is a .NET implementation of the Tapo Smart Plug API. It is written in 
 
 ## Getting Started
 
-### Scanning For Devices
+### Scanning for devices
 
 ```
 var scanRange = "192.168.1.0/24"; // CIDR notation. /32 for single IP, /24 for 254 IPs
