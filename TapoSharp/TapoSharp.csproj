@@ -4,7 +4,29 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <RepositoryUrl>https://github.com/Cirx08/TapoSharp</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Description>TapoSharp is a .NET implementation of the Tapo Smart Plug API. It is written in .NET 6</Description>
+    <Copyright>Cirx08 2022</Copyright>
+    <PackageProjectUrl>https://github.com/Cirx08/TapoSharp</PackageProjectUrl>
+    <Company>Cirx08</Company>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageIcon>Icon.png</PackageIcon>
+    <PackageLicenseFile>C:\Users\ccollins\source\repos\TapoSharp\LICENSE.md</PackageLicenseFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\Icon.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="BouncyCastle.NetCore" Version="1.8.10" />
