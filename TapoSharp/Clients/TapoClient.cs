@@ -12,7 +12,6 @@
         private const int DefaultRequestTimeout = 5; //Seconds
         public static event EventHandler<TapoDeviceDiscoveredEventArgs> OnDeviceDiscovered;
 
-        private IPAddress _ip;
         private KeyPair _keyPair;
         private Guid _uuid;
 
@@ -22,6 +21,11 @@
         protected byte[] _tapoKey;
         protected byte[] _tapoIv;
 
+        public TapoClient()
+            : this(IPAddress.None)
+        {
+        }
+
         public TapoClient(IPAddress ip)
             : this(ip, DefaultRequestTimeout)
         {
@@ -29,7 +33,7 @@
 
         public TapoClient(IPAddress ip, int defaultRequestTimeout)
         {
-            _ip = ip;
+            this.IpAddress = ip;
             _keyPair = EncryptionHelper.GenerateKeyPair();
             _uuid = Guid.NewGuid();
             _token = string.Empty;
@@ -37,9 +41,11 @@
             _tapoIv = new byte[0];
             
             _client = new HttpClient();
-            _client.BaseAddress = new Uri($"http://{_ip.ToString()}");
+            _client.BaseAddress = new Uri($"http://{this.IpAddress.ToString()}");
             _client.Timeout = TimeSpan.FromSeconds(defaultRequestTimeout);
         }
+
+        public IPAddress IpAddress { get; private set; }
 
         public static List<TapoClient> ScanForDevices(string network)
         {
@@ -69,12 +75,12 @@
                     {
                         try
                         {
-                            var client = new P100Client(address);
+                            var client = new TapoClient(address);
                             var token = client.Handshake();
                             if (!string.IsNullOrEmpty(token?.Key))
                             {
                                 clients.Add(client);
-                                client.DeviceDiscovered(new TapoDeviceDiscoveredEventArgs(client, token.Key));
+                                client.DeviceDiscovered(new TapoDeviceDiscoveredEventArgs(address));
                             }
                         }
                         catch { }
@@ -116,6 +122,22 @@
             return null;
         }
 
+        public bool Login(string username, string password)
+        {
+            return this.LoginAsync(username, password).ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+
+        public async Task<bool> LoginAsync(string username, string password)
+        {
+            var token = await this.HandshakeAsync();
+            if (!string.IsNullOrEmpty(token?.Key))
+            { 
+                return await this.LoginAsync(username, password, token?.Key);
+            }
+
+            return false;
+        }
+
         public bool Login(string username, string password, string key)
         {
             return this.LoginAsync(username, password, key).ConfigureAwait(false).GetAwaiter().GetResult();
@@ -123,7 +145,7 @@
 
         public async Task<bool> LoginAsync(string username, string password, string key)
         {
-            if (_client != null)
+            if (_client != null && !string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password) && !string.IsNullOrEmpty(key))
             {
                 try
                 {
@@ -196,6 +218,5 @@
                 handler(this, e);
             }
         }
-
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace TapoSharp.Models
 {
+    using System.Text;
     using System.Text.Json.Serialization;
     using TapoSharp.Enums;
     using TapoSharp.Helpers;
@@ -162,8 +163,32 @@
         [JsonPropertyName("on_time")]
         public long Uptime { get; set; }
 
+        [JsonIgnore]
+        public double Uptime_H 
+        {
+            get
+            {
+                return this.Uptime > 0 ? (double)this.Uptime / 60.0 : 0.0;
+            }
+        }
+
         [JsonPropertyName("default_states")]
         public DeviceState DefaultStates { get; set; }
+
+        public string Print()
+        {
+            var builder = new StringBuilder();
+
+            builder.AppendLine($"Name: {this.Nickname}");
+            builder.AppendLine($"Ip Address: {this.IpAddress}");
+            builder.AppendLine($"Mac Address: {this.MacAddress}");
+            builder.AppendLine($"Model: {this.Model}");
+            builder.AppendLine($"Software Version: {this.FirmwareVersion}");
+            builder.AppendLine($"Hardware Version: {this.HardwareVersion}");
+            builder.AppendLine($"Uptime: {this.Uptime_H.ToString("0.00")}h");
+
+            return builder.ToString();
+        }
     }
 
     public class DeviceState

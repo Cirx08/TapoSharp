@@ -31,7 +31,7 @@
             this.Past7d = new long[0][];
             this.Past30d = new long[0];
             this.Past1y = new long[0];
-            this.CurrentPower = 0;
+            this.CurrentPower_mW = 0;
         }
 
         [JsonPropertyName("today_runtime")]
@@ -72,6 +72,15 @@
         public long[] Past1y { get; set; }
 
         [JsonPropertyName("current_power")]
-        public long CurrentPower { get; set; }
+        public long CurrentPower_mW { get; set; }
+
+        [JsonIgnore]
+        public double CurrentPower_W 
+        {
+            get 
+            {
+                return this.CurrentPower_mW > 0 ? (double)this.CurrentPower_mW / 1000.0 : 0.0;
+            }
+        }
     }
 }

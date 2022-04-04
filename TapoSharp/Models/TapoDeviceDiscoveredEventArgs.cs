@@ -1,22 +1,19 @@
 ﻿namespace TapoSharp.Models
 {
-    using TapoSharp.Clients;
+    using System.Net;
 
     public class TapoDeviceDiscoveredEventArgs
     {
         public TapoDeviceDiscoveredEventArgs()
-            : this(null, string.Empty)
+            : this(IPAddress.None)
         {
         }
 
-        public TapoDeviceDiscoveredEventArgs(P100Client client, string key)
+        public TapoDeviceDiscoveredEventArgs(IPAddress ip)
         {
-            this.Client = client;
-            this.Key = key;
+            this.IpAddress = ip;
         }
 
-        public P100Client Client { get; set; }
-
-        public string Key { get; set; }
+        public IPAddress IpAddress { get; set; }
     }
 }

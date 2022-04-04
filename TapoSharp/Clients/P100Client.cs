@@ -9,6 +9,11 @@
 
     public class P100Client : TapoClient
     {
+        public P100Client()
+            : base()
+        {
+        }
+
         public P100Client(IPAddress ip)
             : base(ip)
         {

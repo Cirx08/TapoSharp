@@ -8,6 +8,11 @@
 
     public class P110Client : P100Client
     {
+        public P110Client()
+            : base()
+        {
+        }
+
         public P110Client(IPAddress ip)
             : base(ip)
         {
