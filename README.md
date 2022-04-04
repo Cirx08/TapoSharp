@@ -98,6 +98,11 @@ if (client.Login(_username, _password))
 
 ## Version History
 
+* 1.0.3
+    * Fixed issue with multiple handshake requests
+    * Fixed issue with scanning of /32 network
+* 1.0.2
+    * Added callback functions on scan discovery
 * 1.0.1
     * Added a merged login and handshake request
     * Reworked the raised event args for OnDeviceDiscovered
