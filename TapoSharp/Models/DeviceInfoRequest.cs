@@ -82,6 +82,26 @@
         [JsonPropertyName("model")]
         public string Model { get; set; }
 
+        [JsonIgnore]
+        public DeviceType ModelType
+        {
+            get 
+            {
+                if (!string.IsNullOrEmpty(this.Model))
+                { 
+                    foreach (DeviceType type in Enum.GetValues(typeof(DeviceType)))
+                    {
+                        if (string.Equals(type.ToString(), this.Model, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return type;
+                        }
+                    }
+                }
+
+                return Enums.DeviceType.UNKNOWN;
+            }
+        }
+
         [JsonPropertyName("mac")]
         public string MacAddress { get; set; }
 

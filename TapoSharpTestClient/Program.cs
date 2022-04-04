@@ -9,28 +9,19 @@ var scanRange = "192.168.1.0/24";
 Console.WriteLine($"Scanning range for devices: '{scanRange}'");
 TapoClient.ScanForDevices(scanRange, FilterEnum.Usable, (ip, tapoClient) =>
 {
-    var client = new P110Client(ip);
-    if (client.Login(_username, _password))
+    if (tapoClient.Login(_username, _password))
     {
-        var info = client.GetDeviceInfo();
+        var info = tapoClient.GetDeviceInfo();
         Console.WriteLine(info.Print());
 
-        var usage = client.GetEnergyUsage();
-        Console.WriteLine($"Current power consumption: '{usage.CurrentPower_W.ToString("0.00")}W'");
-
-        if (info.State == PowerState.ON)
+        if (info.ModelType == DeviceType.P110)
         {
-            Console.WriteLine($"Turning device 'OFF'");
-            //client.ChangeState(PowerState.OFF);
-            Console.WriteLine($"Turning device 'ON'");
-            //client.ChangeState(PowerState.ON);
-        }
-        else
-        {
-            Console.WriteLine($"Turning device 'ON'");
-            //client.ChangeState(PowerState.ON);
-            Console.WriteLine($"Turning device 'OFF'");
-            //client.ChangeState(PowerState.OFF);
+            var client = new P110Client();
+            if (client.Login(_username, _password))
+            { 
+                var usage = client.GetEnergyUsage();
+                Console.WriteLine($"Current power consumption: '{usage.CurrentPower_W.ToString("0.00")}W'");
+            }
         }
     }
 });

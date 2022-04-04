@@ -9,7 +9,6 @@
 
     public class TapoClient
     {
-        private const int DefaultRequestTimeout = 5; //Seconds
         public static event EventHandler<TapoDeviceDiscoveredEventArgs> OnDeviceDiscovered;
 
         private KeyPair _keyPair;
@@ -27,25 +26,33 @@
         }
 
         public TapoClient(IPAddress ip)
-            : this(ip, DefaultRequestTimeout)
+            : this(ip, 5)
         {
         }
 
         public TapoClient(IPAddress ip, int defaultRequestTimeout)
         {
             this.IpAddress = ip;
+            this.DefaultRequestTimeout = defaultRequestTimeout;
+            this.InitClient();
+        }
+
+        public IPAddress IpAddress { get; private set; }
+
+        private int DefaultRequestTimeout { get; set; }
+
+        private void InitClient()
+        {
             _keyPair = EncryptionHelper.GenerateKeyPair();
             _uuid = Guid.NewGuid();
             _token = string.Empty;
             _tapoKey = new byte[0];
             _tapoIv = new byte[0];
-            
+
             _client = new HttpClient();
             _client.BaseAddress = new Uri($"http://{this.IpAddress.ToString()}");
-            _client.Timeout = TimeSpan.FromSeconds(defaultRequestTimeout);
+            _client.Timeout = TimeSpan.FromSeconds(this.DefaultRequestTimeout);
         }
-
-        public IPAddress IpAddress { get; private set; }
 
         public static List<TapoClient> ScanForDevices(string network, FilterEnum filter = FilterEnum.Usable, Action<IPAddress, TapoClient> action = null)
         {
@@ -66,7 +73,7 @@
         {
             var clients = new List<TapoClient>();
 
-            var addressList = network.ListIPAddress(filter);
+            var addressList = network.Cidr != 32 ? network.ListIPAddress(filter).ToList() : new List<IPAddress>() { network.FirstUsable };
             if (addressList != null)
             {
                 await Task.Run(() =>
@@ -111,6 +118,8 @@
             {
                 try
                 {
+                    this.InitClient();
+                    
                     var response = await _client.PostAsync("/app", new StringContent(JsonSerializer.Serialize(new HandshakeRequest(_uuid.ToString(), _keyPair.PublicKey.Replace("\r", string.Empty)))));
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
