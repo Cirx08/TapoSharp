@@ -18,19 +18,17 @@ Console.WriteLine($"Found '{clients.Count}' devices in the range: '{scanRange}'"
 var _username = "{ENTER_TAPO_ACCOUNT_EMAIL_HERE}";
 var _password = "{ENTER_TAPO_ACCOUNT_PASSWORD_HERE}";
 
-TapoClient.OnDeviceDiscovered += (s, e) => 
+var scanRange = "192.168.1.0/24"; // CIDR notation. /32 for single IP, /24 for 254 IPs
+var clients = TapoClient.ScanForDevices(scanRange, FilterEnum.Usable, (ip, tapoClient) => 
 {
-	// Attempt to login
+    // Attempt to login
     var client = new P100Client(e.IpAddress);
     if (client.Login(_username, _password))
     {
         var info = client.GetDeviceInfo();
         Console.WriteLine(info.Print());
-    }
-};
-
-var scanRange = "192.168.1.0/24"; // CIDR notation. /32 for single IP, /24 for 254 IPs
-var clients = TapoClient.ScanForDevices(scanRange);
+    }    
+});
 ```
 
 ### Getting device information

@@ -47,22 +47,22 @@
 
         public IPAddress IpAddress { get; private set; }
 
-        public static List<TapoClient> ScanForDevices(string network)
+        public static List<TapoClient> ScanForDevices(string network, FilterEnum filter = FilterEnum.Usable, Action<IPAddress, TapoClient> action = null)
         {
-            return ScanForDevicesAsync(network).ConfigureAwait(false).GetAwaiter().GetResult();
+            return ScanForDevicesAsync(network, filter, action).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
-        public static List<TapoClient> ScanForDevices(IPNetwork network)
+        public static List<TapoClient> ScanForDevices(IPNetwork network, FilterEnum filter = FilterEnum.Usable, Action<IPAddress, TapoClient> action = null)
         {
-            return ScanForDevicesAsync(network).ConfigureAwait(false).GetAwaiter().GetResult();
+            return ScanForDevicesAsync(network, filter, action).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
-        public static async Task<List<TapoClient>> ScanForDevicesAsync(string network)
+        public static async Task<List<TapoClient>> ScanForDevicesAsync(string network, FilterEnum filter = FilterEnum.Usable, Action<IPAddress, TapoClient> action = null)
         {
-            return await ScanForDevicesAsync(IPNetwork.Parse(network));
+            return await ScanForDevicesAsync(IPNetwork.Parse(network), filter, action);
         }
 
-        public static async Task<List<TapoClient>> ScanForDevicesAsync(IPNetwork network, FilterEnum filter = FilterEnum.Usable)
+        public static async Task<List<TapoClient>> ScanForDevicesAsync(IPNetwork network, FilterEnum filter = FilterEnum.Usable, Action<IPAddress, TapoClient> action = null)
         {
             var clients = new List<TapoClient>();
 
@@ -81,6 +81,15 @@
                             {
                                 clients.Add(client);
                                 client.DeviceDiscovered(new TapoDeviceDiscoveredEventArgs(address));
+
+                                if (action != null)
+                                {
+                                    try
+                                    {
+                                        action(address, client);
+                                    }
+                                    catch { }
+                                }
                             }
                         }
                         catch { }

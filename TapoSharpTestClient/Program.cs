@@ -1,4 +1,5 @@
-﻿using TapoSharp.Clients;
+﻿using System.Net;
+using TapoSharp.Clients;
 using TapoSharp.Enums;
 
 var _username = "{ENTER_TAPO_ACCOUNT_EMAIL_HERE}";
@@ -6,11 +7,11 @@ var _password = "{ENTER_TAPO_ACCOUNT_PASSWORD_HERE}";
 
 var scanRange = "192.168.1.0/24";
 Console.WriteLine($"Scanning range for devices: '{scanRange}'");
-TapoClient.OnDeviceDiscovered += (s, e) => 
+TapoClient.ScanForDevices(scanRange, FilterEnum.Usable, (ip, tapoClient) =>
 {
-    var client = new P110Client(e.IpAddress);
+    var client = new P110Client(ip);
     if (client.Login(_username, _password))
-    { 
+    {
         var info = client.GetDeviceInfo();
         Console.WriteLine(info.Print());
 
@@ -20,18 +21,17 @@ TapoClient.OnDeviceDiscovered += (s, e) =>
         if (info.State == PowerState.ON)
         {
             Console.WriteLine($"Turning device 'OFF'");
-            client.ChangeState(PowerState.OFF);
+            //client.ChangeState(PowerState.OFF);
             Console.WriteLine($"Turning device 'ON'");
-            client.ChangeState(PowerState.ON);
+            //client.ChangeState(PowerState.ON);
         }
-        else 
+        else
         {
             Console.WriteLine($"Turning device 'ON'");
-            client.ChangeState(PowerState.ON);
+            //client.ChangeState(PowerState.ON);
             Console.WriteLine($"Turning device 'OFF'");
-            client.ChangeState(PowerState.OFF);
+            //client.ChangeState(PowerState.OFF);
         }
     }
-};
-TapoClient.ScanForDevices(scanRange);
+});
 Thread.Sleep(Timeout.Infinite);
