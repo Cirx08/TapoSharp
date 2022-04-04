@@ -16,6 +16,8 @@
     <RunAnalyzersDuringBuild>True</RunAnalyzersDuringBuild>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageTags>tapo;kasa;p100;p110;tp-link</PackageTags>
+    <NeutralLanguage>en</NeutralLanguage>
   </PropertyGroup>
 
   <ItemGroup>
