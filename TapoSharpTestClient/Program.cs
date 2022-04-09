@@ -25,4 +25,5 @@ TapoClient.ScanForDevices(scanRange, FilterEnum.Usable, (ip, tapoClient) =>
         }
     }
 });
+
 Thread.Sleep(Timeout.Infinite);

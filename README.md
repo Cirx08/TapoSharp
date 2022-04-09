@@ -12,7 +12,7 @@ var clients = TapoClient.ScanForDevices(scanRange);
 Console.WriteLine($"Found '{clients.Count}' devices in the range: '{scanRange}'");
 ```
 
-### Attaching an event handler
+### Executing a callback function on dicsovered devices
 
 ```
 var _username = "{ENTER_TAPO_ACCOUNT_EMAIL_HERE}";
@@ -29,6 +29,26 @@ var clients = TapoClient.ScanForDevices(scanRange, FilterEnum.Usable, (ip, tapoC
         Console.WriteLine(info.Print());
     }    
 });
+```
+
+### Attaching an event handler
+
+```
+var _username = "{ENTER_TAPO_ACCOUNT_EMAIL_HERE}";
+var _password = "{ENTER_TAPO_ACCOUNT_PASSWORD_HERE}";
+
+var scanRange = "192.168.1.0/24"; // CIDR notation. /32 for single IP, /24 for 254 IPs
+TapoClient.OnDeviceDiscovered += (s, e) =>
+{
+    // Attempt to login
+    var client = new P100Client(e.IpAddress);
+    if (client.Login(_username, _password))
+    {
+        var info = client.GetDeviceInfo();
+        Console.WriteLine(info.Print());
+    }
+};
+TapoClient.ScanForDevices(scanRange);
 ```
 
 ### Getting device information
@@ -98,6 +118,8 @@ if (client.Login(_username, _password))
 
 ## Version History
 
+* 1.0.4.1
+    * Fixed the README file code examples
 * 1.0.4
     * Added login state tracker
 * 1.0.3
